@@ -2,36 +2,25 @@
 
 use App\Mail;
 
-test('An email can be sent', function () {
-    $mail = new Mail(
-        'default',
-        'from@test.com',
-        'to@test.com',
-        null,
-        null,
-        'Test message',
-        'This is the email body',
-        ['test.png', 'test.pdf'],
-    );
+test('An email can be sent with fluent', function () {
+    $mail = Mail::make()
+        ->to('to@test.com')
+        ->subject('Test message')
+        ->body('This is the email body')
+        ->attach('test.png', 'test.pdf')
+        ->send();
 
-    $mail->send();
-
-    expect($mail->isSent)->toBeTrue();
+    expect($mail)->toBeInstanceOf(Mail::class)
+        ->and($mail->isSent)->toBeTrue();
 });
 
 test('An email cannot be sent twice if not forced', function () {
-    $mail = new Mail(
-        'default',
-        'from@test.com',
-        'to@test.com',
-        null,
-        null,
-        'Test message',
-        'This is the email body',
-        ['test.png', 'test.pdf'],
-    );
-
-    $mail->send();
+    $mail = Mail::make()
+        ->to('to@test.com')
+        ->subject('Test message')
+        ->body('This is the email body')
+        ->attach('test.png', 'test.pdf')
+        ->send();
 
     expect($mail->isSent)->toBeTrue();
 
