@@ -32,5 +32,8 @@ test('An email cannot be sent twice if not forced', function () {
     );
 
     $mail->send();
-    $mail->send();
+
+    expect($mail->isSent)->toBeTrue();
+
+    $mail->send(); // This will throw an exception
 })->throws(DomainException::class, 'Mail is already sent');
